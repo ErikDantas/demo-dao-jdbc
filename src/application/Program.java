@@ -1,21 +1,21 @@
 package application;
 
-import java.util.Date;
+import javax.swing.JOptionPane;
 
 import dao.DaoFactory;
 import dao.SellerDao;
-import entities.Department;
 import entities.Seller;
 
 public class Program {
 
 	public static void main(String[] args) {
 
-		Department obj = new Department(1,"Electronics");
-		Seller seller = new Seller(12, "Bob","bob@gmail.com",new Date(),2400,obj);
+		SellerDao sellerdao = DaoFactory.createSellerDao();
+		
+		Seller seller = sellerdao.findById(Integer.parseInt(JOptionPane.showInputDialog("Qual ID deseja buscar?")));
 		System.out.println(seller);
 		
-		SellerDao sellerdao = DaoFactory.createSellerDao();
+		
 		
 	}
 

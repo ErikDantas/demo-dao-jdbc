@@ -14,9 +14,7 @@ public class Program {
 		
 		Seller seller = sellerdao.findById(Integer.parseInt(JOptionPane.showInputDialog("Qual ID deseja buscar?")));
 		System.out.println(seller);
-		
-		
-		
+
 	}
 
 }

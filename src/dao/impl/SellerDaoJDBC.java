@@ -1,6 +1,7 @@
 package dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -26,7 +27,30 @@ public class SellerDaoJDBC implements SellerDao {
 	
 	@Override
 	public void insert(Seller obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("insert into seller (Name, Email, BirthDate, BaseSalary, DepartmentId) "
+					+"values (?, ?, ?, ?, ?)", st.RETURN_GENERATED_KEYS);
+			st.setString(1, obj.getName());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new Date(obj.getBirthdate().getTime()));
+			st.setDouble(4, obj.getBasesalary());
+			st.setInt(5, obj.getDepartment().getId());
+			
+			int rowsAffected = st.executeUpdate();
+			if(rowsAffected>0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if(rs.next()) {
+					obj.setId(rs.getInt(1));				
+				}
+				DB.closeResultSet(rs);
+			}else {
+				throw new DbException("Unexpected Failure. No rows affected!");
+			}
+					
+		}catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
 		
 	}
 
@@ -139,7 +163,8 @@ public class SellerDaoJDBC implements SellerDao {
 				}
 				Seller seller = instantiateSeller(rs, dep);
 				list.add(seller);
-			}
+			}	
+
 			return list;
 		}catch(SQLException e) {
 			throw new DbException(e.getMessage());
